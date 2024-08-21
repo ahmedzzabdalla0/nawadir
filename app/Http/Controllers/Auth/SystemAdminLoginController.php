@@ -41,7 +41,7 @@ class SystemAdminLoginController extends Controller
             }
         }else{
             
-            flash(bcrypt("123456789"),'error');
+            flash(bcrypt("اسم المستخدم او كلمة المرور خاطئة"),'error');
         }
 
         return redirect()->back()->withErrors(['email'=>"اسم المستخدم او كلمة المرور خاطئة"])->withInput($request->only('email', 'remember'));
