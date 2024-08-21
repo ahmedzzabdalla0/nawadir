@@ -1,0 +1,21 @@
+.header_img {
+    height: 70px!important;
+}
+.m-topbar .m-topbar__nav.m-nav>.m-nav__item>.m-nav__link .m-topbar__userpic img {
+    border-radius: 10px;
+}
+.m-aside-menu .m-menu__nav>.m-menu__item.m-menu__item--active>.m-menu__link {
+    background-color: #E3F2E9;
+}
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav>.m-menu__item:not(.m-menu__item--parent):not(.m-menu__item--open):not(.m-menu__item--expanded):not(.m-menu__item--active):hover {
+    background-color: #E3F2E9;
+}
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav>.m-menu__item>.m-menu__link .m-menu__link-icon {
+    color: #279D55;
+}
+.m-aside-menu.m-aside-menu--skin-dark .m-menu__nav>.m-menu__item:not(.m-menu__item--parent):not(.m-menu__item--open):not(.m-menu__item--expanded):not(.m-menu__item--active):hover>.m-menu__link .m-menu__link-icon {
+    color: #279D55;
+}
+.status_title {
+    background: #279D55!important;
+}

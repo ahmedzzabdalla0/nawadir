@@ -1,0 +1,1984 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Base App API swagger documentation",
+        "description": "This is Base project API Documentation",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "info@selsela.net"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://nwader.com.sa/api",
+            "description": "Base server"
+        },
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "local server"
+        }
+    ],
+    "paths": {
+        "/driver/login": {
+            "post": {
+                "tags": [
+                    "AuthanticationDriver"
+                ],
+                "summary": "Driver login API",
+                "description": "Driver login service returns driver object",
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar OR en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_key",
+                        "in": "header",
+                        "description": "mobile device key used for firebase notifications",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "drivername",
+                                    "password",
+                                    "device_type"
+                                ],
+                                "properties": {
+                                    "drivername": {
+                                        "description": "Driver email or mobile",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Driver Password",
+                                        "type": "string"
+                                    },
+                                    "device_type": {
+                                        "description": "Driver device type Android Or IOS",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and driver object"
+                    },
+                    "422": {
+                        "description": "status = true : Driver not activated || status = false : Driver not found or password is not correct"
+                    }
+                }
+            }
+        },
+        "/driver/change_password": {
+            "post": {
+                "tags": [
+                    "AuthanticationDriver"
+                ],
+                "summary": "change authanticated driver password API",
+                "description": "change authanticated driver password service",
+                "operationId": "changePassword",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "driver_id",
+                                    "old_password",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
+                                "properties": {
+                                    "driver_id": {
+                                        "description": "Authanticated driver id",
+                                        "type": "number"
+                                    },
+                                    "old_password": {
+                                        "description": "Account old password",
+                                        "type": "string"
+                                    },
+                                    "new_password": {
+                                        "description": "Account new password shoud be at least 6 chars and different from old one",
+                                        "type": "string"
+                                    },
+                                    "new_password_confirmation": {
+                                        "description": "should be same as new_password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and driver object"
+                    },
+                    "422": {
+                        "description": "driver not found or one of the fields is missing or token is invalid"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/driver/update_profile": {
+            "post": {
+                "tags": [
+                    "AuthanticationDriver"
+                ],
+                "summary": "Driver update profile API",
+                "description": "Driver update profile service returns driver object in case of success",
+                "operationId": "apiUpdate",
+                "parameters": [
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "driver_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "Driver name",
+                                        "type": "string"
+                                    },
+                                    "mobile": {
+                                        "description": "Driver mobile with length of 9 numbers and has to be uniqe for all drivers",
+                                        "type": "number"
+                                    },
+                                    "email": {
+                                        "description": "Driver valid email and has to be uniqe for all drivers",
+                                        "type": "string"
+                                    },
+                                    "driver_id": {
+                                        "description": "Authanticated driver id",
+                                        "type": "string"
+                                    },
+                                    "uploaded_file": {
+                                        "description": "profile image",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and driver object"
+                    },
+                    "422": {
+                        "description": "one of the fields is missing or has error"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/driver/forget_password": {
+            "post": {
+                "tags": [
+                    "AuthanticationDriver"
+                ],
+                "summary": "driver forget password API",
+                "description": "Resend new password to driver mobile or email contains link to set new password to email",
+                "operationId": "forgetPassword",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "drivername"
+                                ],
+                                "properties": {
+                                    "drivername": {
+                                        "description": "it accept the email or the mobile of the driver reset method will be the first match",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true"
+                    },
+                    "422": {
+                        "description": "driver not found"
+                    }
+                }
+            }
+        },
+        "/driver/update_device_key": {
+            "post": {
+                "tags": [
+                    "AuthanticationDriver"
+                ],
+                "summary": "update driver device key API",
+                "description": "update driver device key for driver",
+                "operationId": "updateDeviceKey",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "device_key"
+                                ],
+                                "properties": {
+                                    "device_key": {
+                                        "description": "new device key",
+                                        "type": "string"
+                                    },
+                                    "driver_id": {
+                                        "description": "Authanticated driver id and its optional",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true"
+                    },
+                    "422": {
+                        "description": "driver not found or one of the fields is missing"
+                    }
+                }
+            }
+        },
+        "/driver/get_driver_notifications": {
+            "get": {
+                "tags": [
+                    "GetDataDriver"
+                ],
+                "summary": "Get driver notifications API",
+                "description": "Get driver notifications service",
+                "operationId": "getUserNotifications",
+                "parameters": [
+                    {
+                        "name": "driver_id",
+                        "in": "query",
+                        "description": "Driver id",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "device_key",
+                        "in": "query",
+                        "description": "device_key",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and notifications array of objects"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/driver/delete_notification": {
+            "post": {
+                "tags": [
+                    "AuthanticationDriver"
+                ],
+                "summary": "delete driver notification using notification id",
+                "description": "delete driver notification using notification id service",
+                "operationId": "DeleteUserNotification",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "notification_id"
+                                ],
+                                "properties": {
+                                    "notification_id": {
+                                        "description": "deletable notification id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true along with message"
+                    },
+                    "422": {
+                        "description": "notification not found"
+                    }
+                }
+            }
+        },
+        "/driver/get_orders": {
+            "get": {
+                "tags": [
+                    "GetDataDriver"
+                ],
+                "summary": "Get driver orders API",
+                "description": "Get driver orders api",
+                "operationId": "getUserOrders",
+                "parameters": [
+                    {
+                        "name": "driver_id",
+                        "in": "query",
+                        "description": "driver d",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and orders array"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/driver/get_archived_orders": {
+            "get": {
+                "tags": [
+                    "GetDataDriver"
+                ],
+                "summary": "Get driver archived orders API",
+                "description": "Get driver archived orders api",
+                "operationId": "getUserArchivedOrders",
+                "parameters": [
+                    {
+                        "name": "driver_id",
+                        "in": "query",
+                        "description": "driver d",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number, in case if use in home page start it 2 to get second page after the four shown products",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and orders array"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/driver/change_order_status": {
+            "post": {
+                "tags": [
+                    "PostDataDriver"
+                ],
+                "summary": "Change Order Status  API",
+                "description": "Change Order Status service",
+                "operationId": "ChangeOrderStatus",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "driver_id",
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "driver_id": {
+                                        "description": "Authanticated driver id",
+                                        "type": "number"
+                                    },
+                                    "order_id": {
+                                        "description": "order id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and canceled order object"
+                    },
+                    "422": {
+                        "description": "driver not found or order not found or token is invalid or order is already canceled"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/driver/UpdateDriverLocation": {
+            "post": {
+                "tags": [
+                    "PostDataDriver"
+                ],
+                "summary": "Update Driver Location  API",
+                "description": "Update Driver Location service",
+                "operationId": "UpdateDriverLocation",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "driver_id",
+                                    "lat",
+                                    "lng"
+                                ],
+                                "properties": {
+                                    "driver_id": {
+                                        "description": "Authanticated driver id",
+                                        "type": "number"
+                                    },
+                                    "lat": {
+                                        "description": "lat",
+                                        "type": "number"
+                                    },
+                                    "lng": {
+                                        "description": "lng",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and canceled order object"
+                    },
+                    "422": {
+                        "description": "driver not found or order not found or token is invalid or order is already canceled"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/logout": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "User logout API",
+                "description": "User logout service",
+                "operationId": "logout",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar OR en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "Authanticated User id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true"
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "User register API",
+                "description": "User register service returns user object in case of success",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_key",
+                        "in": "header",
+                        "description": "mobile device key used for firebase notifications",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "device_name",
+                        "in": "header",
+                        "description": "user device name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "mobile",
+                                    "device_type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "User name",
+                                        "type": "string"
+                                    },
+                                    "mobile": {
+                                        "description": "User mobile with length of 9 numbers and has to be uniqe for all users",
+                                        "type": "number"
+                                    },
+                                    "device_type": {
+                                        "description": "User device type Android Or IOS",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and user object"
+                    },
+                    "422": {
+                        "description": "one of the fields is missing or has error"
+                    }
+                }
+            }
+        },
+        "/user/change_password": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "change authanticated user password API",
+                "description": "change authanticated user password service",
+                "operationId": "changePassword",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "old_password",
+                                    "new_password",
+                                    "new_password_confirmation"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "Authanticated user id",
+                                        "type": "number"
+                                    },
+                                    "old_password": {
+                                        "description": "Account old password",
+                                        "type": "string"
+                                    },
+                                    "new_password": {
+                                        "description": "Account new password shoud be at least 6 chars and different from old one",
+                                        "type": "string"
+                                    },
+                                    "new_password_confirmation": {
+                                        "description": "should be same as new_password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and user object"
+                    },
+                    "422": {
+                        "description": "user not found or one of the fields is missing or token is invalid"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/update_profile": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "User update profile API",
+                "description": "User update profile service returns user object in case of success",
+                "operationId": "apiUpdate",
+                "parameters": [
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "token"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "User name",
+                                        "type": "string"
+                                    },
+                                    "mobile": {
+                                        "description": "User mobile with length of 9 numbers and has to be uniqe for all users",
+                                        "type": "number"
+                                    },
+                                    "email": {
+                                        "description": "User valid email and has to be uniqe for all users",
+                                        "type": "string"
+                                    },
+                                    "user_id": {
+                                        "description": "Authanticated user id",
+                                        "type": "string"
+                                    },
+                                    "uploaded_file": {
+                                        "description": "profile image",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and user object"
+                    },
+                    "422": {
+                        "description": "one of the fields is missing or has error"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/forget_password": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "user forget password API",
+                "description": "Resend new password to user mobile or email contains link to set new password to email",
+                "operationId": "forgetPassword",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar Or en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "user reset method will be user email",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true"
+                    },
+                    "422": {
+                        "description": "user not found"
+                    }
+                }
+            }
+        },
+        "/user/update_device_key": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "update user device key API",
+                "description": "update user device key for user",
+                "operationId": "updateDeviceKey",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "device_key"
+                                ],
+                                "properties": {
+                                    "device_key": {
+                                        "description": "new device key",
+                                        "type": "string"
+                                    },
+                                    "user_id": {
+                                        "description": "Authanticated user id and its optional",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true"
+                    },
+                    "422": {
+                        "description": "user not found or one of the fields is missing"
+                    }
+                }
+            }
+        },
+        "/user/get_user_notifications": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get user notifications API",
+                "description": "Get user notifications service",
+                "operationId": "getUserNotifications",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "User id",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "device_key",
+                        "in": "query",
+                        "description": "device_key",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and notifications array of objects"
+                    }
+                }
+            }
+        },
+        "/user/delete_notification": {
+            "post": {
+                "tags": [
+                    "Authantication"
+                ],
+                "summary": "delete user notification using notification id",
+                "description": "delete user notification using notification id service",
+                "operationId": "DeleteUserNotification",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "notification_id"
+                                ],
+                                "properties": {
+                                    "notification_id": {
+                                        "description": "deletable notification id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true along with message"
+                    },
+                    "422": {
+                        "description": "notification not found"
+                    }
+                }
+            }
+        },
+        "/user/get_configuration": {
+            "get": {
+                "tags": [
+                    "GetGeneraLData"
+                ],
+                "summary": "Get configrations API",
+                "description": "Get configrations service",
+                "operationId": "config",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and config,payment_types,user_types and cases arraies"
+                    }
+                }
+            }
+        },
+        "/user/get_about_page": {
+            "get": {
+                "tags": [
+                    "GetGeneraLData"
+                ],
+                "summary": "Get about page API",
+                "description": "Get about page service",
+                "operationId": "getAboutPage",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and page object"
+                    }
+                }
+            }
+        },
+        "/user/get_rules_page": {
+            "get": {
+                "tags": [
+                    "GetGeneraLData"
+                ],
+                "summary": "Get about page API",
+                "description": "Get about page service",
+                "operationId": "getRulesPage",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and page object"
+                    }
+                }
+            }
+        },
+        "/user/get_categories": {
+            "get": {
+                "tags": [
+                    "GetGeneraLData"
+                ],
+                "summary": "Get categories API",
+                "description": "Get categories service",
+                "operationId": "cats",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and categories array"
+                    }
+                }
+            }
+        },
+        "/user/get_areas": {
+            "get": {
+                "tags": [
+                    "GetGeneraLData"
+                ],
+                "summary": "Get govs and areas API",
+                "description": "Get govs and areas service",
+                "operationId": "getAreas",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and govs array"
+                    }
+                }
+            }
+        },
+        "/user/get_cut_types_images": {
+            "get": {
+                "tags": [
+                    "GetGeneraLData"
+                ],
+                "summary": "Get get cut_types images API",
+                "description": "Get  get cut_types images service",
+                "operationId": "get_cut_types_images",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and images array"
+                    }
+                }
+            }
+        },
+        "/user/contact_us": {
+            "post": {
+                "tags": [
+                    "PostData"
+                ],
+                "summary": "contact us API",
+                "description": "contact us service",
+                "operationId": "contactUs",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "mobile",
+                                    "email",
+                                    "title",
+                                    "details"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "sender name",
+                                        "type": "string"
+                                    },
+                                    "mobile": {
+                                        "description": "sender mobile",
+                                        "type": "number"
+                                    },
+                                    "email": {
+                                        "description": "sender valid email",
+                                        "type": "string"
+                                    },
+                                    "title": {
+                                        "description": "message title",
+                                        "type": "string"
+                                    },
+                                    "details": {
+                                        "description": "message details",
+                                        "type": "string"
+                                    },
+                                    "user_id": {
+                                        "description": "sender user id if exist",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and message object"
+                    },
+                    "422": {
+                        "description": "one of the fields is not formated"
+                    }
+                }
+            }
+        },
+        "/user/get_orders": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get user orders API",
+                "description": "Get user orders api",
+                "operationId": "getUserOrders",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user d",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and orders array"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/get_order_details": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get order details API",
+                "description": "Get order details service",
+                "operationId": "order_details",
+                "parameters": [
+                    {
+                        "name": "order_id",
+                        "in": "query",
+                        "description": "valid order id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and order object"
+                    }
+                }
+            }
+        },
+        "/user/add_user_address": {
+            "post": {
+                "tags": [
+                    "PostData"
+                ],
+                "summary": "add user address API",
+                "description": "add user address service",
+                "operationId": "addUserAddress",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "address_name",
+                                    "gov_id",
+                                    "area_id",
+                                    "build_number"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "user id",
+                                        "type": "number"
+                                    },
+                                    "address_name": {
+                                        "description": "required address name",
+                                        "type": "number"
+                                    },
+                                    "gov_id": {
+                                        "description": "required address governate id",
+                                        "type": "number"
+                                    },
+                                    "area_id": {
+                                        "description": "required address area id",
+                                        "type": "number"
+                                    },
+                                    "street": {
+                                        "description": "address street",
+                                        "type": "string"
+                                    },
+                                    "build_number": {
+                                        "description": "address build_number",
+                                        "type": "string"
+                                    },
+                                    "floor": {
+                                        "description": "address floor",
+                                        "type": "string"
+                                    },
+                                    "flat": {
+                                        "description": "address flat",
+                                        "type": "string"
+                                    },
+                                    "lat": {
+                                        "description": "address lat",
+                                        "type": "number"
+                                    },
+                                    "lng": {
+                                        "description": "address lat",
+                                        "type": "number"
+                                    },
+                                    "full_address": {
+                                        "description": "full_address",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and user object"
+                    },
+                    "422": {
+                        "description": "user not found or one of the fields is missing"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/delete_user_address": {
+            "post": {
+                "tags": [
+                    "PostData"
+                ],
+                "summary": "delete user address API",
+                "description": "delete user address service",
+                "operationId": "deleteUserAddress",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "address_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "user id",
+                                        "type": "number"
+                                    },
+                                    "address_id": {
+                                        "description": "address id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and user object"
+                    },
+                    "422": {
+                        "description": "user not found or one of the fields is missing"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/add_order": {
+            "post": {
+                "tags": [
+                    "PostData"
+                ],
+                "summary": "send order API",
+                "description": "send order service",
+                "operationId": "apiAddOrder",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "price",
+                                    "products",
+                                    "payment_type",
+                                    "address_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "Authanticated user id",
+                                        "type": "number"
+                                    },
+                                    "price": {
+                                        "description": "price",
+                                        "type": "number"
+                                    },
+                                    "products": {
+                                        "description": "array of products in the following format [[product_variant_id,quantity,cut_type_id,cover_type_id,is_slaughtered],[product_variant_id,quantity,cut_type_id,cover_type_id,is_slaughtered]] such as [[43,1,1,0,0],[65,2,2,1,1]],send cover_type_id 0 if no cover for product,get cover_types and cut_types from settings service,is_slaughtered is flag if sent 1 the product is slaughtered ,0 it is not slaughtered",
+                                        "type": "string"
+                                    },
+                                    "payment_type": {
+                                        "description": "payment type *you can find its ids from the get configration api",
+                                        "type": "number"
+                                    },
+                                    "address_id": {
+                                        "description": "required address",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and user and transaction objects"
+                    },
+                    "422": {
+                        "description": "user not found or one of the fields is missing or token is invalid"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/cancel_order": {
+            "post": {
+                "tags": [
+                    "PostData"
+                ],
+                "summary": "cancel order API",
+                "description": "cancel order service",
+                "operationId": "apiCancelOrder",
+                "parameters": [
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "user_id",
+                                    "order_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "Authanticated user id",
+                                        "type": "number"
+                                    },
+                                    "order_id": {
+                                        "description": "order id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and canceled order object"
+                    },
+                    "422": {
+                        "description": "user not found or order not found or token is invalid or order is already canceled"
+                    }
+                }
+            }
+        },
+        "/user/get_home": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get app home API",
+                "description": "Get app home service",
+                "operationId": "getHome",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user id",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and offers,categories,recent arraies"
+                    }
+                }
+            }
+        },
+        "/user/get_products": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get products API",
+                "description": "Get products api *paginging 4 items in each page *to use for filter products send the data to filter",
+                "operationId": "getProducts",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "page number, in case if use in home page start it 2 to get second page after the four shown products",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "category_id",
+                        "required": false,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "name string",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and products array"
+                    }
+                }
+            }
+        },
+        "/user/get_product_details": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get product details API",
+                "description": "Get product details api",
+                "operationId": "getProductDetails",
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "in": "query",
+                        "description": "product_id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and product object"
+                    }
+                }
+            }
+        },
+        "/user/add_remove_fav": {
+            "post": {
+                "tags": [
+                    "PostData"
+                ],
+                "summary": "add the product to faverate in it not in and remove ite if it exist",
+                "description": "add the product to faverate in it not in and remove ite if it exist",
+                "operationId": "add_remove_fav",
+                "parameters": [
+                    {
+                        "name": "X-Authorization",
+                        "in": "header",
+                        "description": "Bearer Token",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "product_id",
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "description": "user id",
+                                        "type": "number"
+                                    },
+                                    "product_id": {
+                                        "description": "product id",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true along with message"
+                    },
+                    "422": {
+                        "description": "product not found"
+                    }
+                },
+                "security": [
+                    {
+                        "default": []
+                    }
+                ]
+            }
+        },
+        "/user/get_user_favorite": {
+            "get": {
+                "tags": [
+                    "GetData"
+                ],
+                "summary": "Get favorite products API",
+                "description": "Get favorite products api",
+                "operationId": "getUserFav",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "language",
+                        "in": "header",
+                        "description": "language ar|en",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation with status = true and products array"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "token": {
+                "type": "apiKey",
+                "name": "X-Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authantication",
+            "description": "API Package for user authantication requests"
+        },
+        {
+            "name": "GetData",
+            "description": "API Package for retrieving data requests"
+        },
+        {
+            "name": "PostData",
+            "description": "API Package for posting data requests"
+        }
+    ]
+}

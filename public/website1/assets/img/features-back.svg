@@ -1,0 +1,9 @@
+<svg id="Group_8" data-name="Group 8" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1366" height="883.065" viewBox="0 0 1366 883.065">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.585" y1="0.244" x2="0.585" y2="0.937" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#fff"/>
+      <stop offset="1" stop-color="#f7f7f7"/>
+    </linearGradient>
+  </defs>
+  <path id="Mask" d="M0,0H1366V832.171s-264.861,82.838-632.3,37.146S0,827.371,0,827.371Z" fill="url(#linear-gradient)"/>
+</svg>

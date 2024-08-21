@@ -1,0 +1,1 @@
+<div class="input-group " >    <input type="text" name="price_from" value="{{HELPER::set_if($_GET['price_from'])}}" class="form-control m-input m-input--pill" placeholder="من سعر">    <input type="text" name="price_to" value="{{HELPER::set_if($_GET['price_to'])}}" class="form-control m-input m-input--pill" placeholder="الى سعر"></div>
